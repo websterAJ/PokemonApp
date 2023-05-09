@@ -1,10 +1,10 @@
 const express = require("express");
-const axios = require("axios");
 const router = express.Router();
-const PokemonController = require("../controllers/Pokemon");
+const PokemonController = require("../controllers/Pokemons");
 
 
 router.get("/", PokemonController.findAll);
+router.get("/?page=[1-9]", PokemonController.findAll);
 router.get("/:idPokemon",PokemonController.findById);
 router.post("/",PokemonController.create);
 
