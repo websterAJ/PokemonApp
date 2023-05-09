@@ -1,31 +1,67 @@
 const db = require("../db");
 const Pokemon = db.Pokemon;
+const { Op } = require("sequelize");
 
-exports.create = (req, res) => {
-    if (!req.body.pass || !req.body.email) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
-        return;
+let PokemonDta = {
+    "nombre":"",
+    "vida":0,
+    "imagen":"",
+    "ataque":0,
+    "defensa":0,
+    "velocidad":0,
+    "altura":0.0,
+    "peso":0.0
+};
+
+const validar= (body) =>{
+    let resutl = true;
+    for (let ele in body){
+        let element =body[ele];
+        if(typeof(element) == 'string'){
+            if (element !== "" && PokemonDta[ele] != undefined ) {
+                PokemonDta[ele] = element
+            }else{
+                resutl= false; 
+            }
+        }else if(typeof(element) == 'number'){
+            if (element > 0 && PokemonDta[ele] != undefined ) {
+                PokemonDta[ele] = element
+            }else if(ele != "velocidad" && ele != "altura" && ele != "peso"){
+                resutl= false;
+            }
+        }
     }
-    const Pokemon = {
-        pass: req.body.pass,
-        email: req.body.email,
-    };
-    Pokemon.create(Pokemon).then(data => { res.send(data);})
-    .catch(err => {
-        res.status(500).send({
-            message:
-            err.message || "Some error occurred while creating the Pokemon."
+    return resutl;
+}
+
+exports.create = async (req, res) => {
+    if (!validar(req.body)) {
+        res.status(400).send({
+            message: "error while processing data please check"
         });
-    });
+    }
+    let dta = await Pokemon.findOne({where:{ nombre: { [Op.eq]: PokemonDta.nombre } }});
+    if(dta == null){
+        Pokemon.create(PokemonDta).then(data => { 
+            res.send({data:data,message:"data successfully saved"});
+        }).catch(err => {
+            res.status(400).send({
+                message:  err.message || "error while processing data please check"
+            });
+        });
+    }else{
+        res.status(400).send({
+            message:  "pokemon already registered in database"
+        }); 
+    }
+    
+    
 };
 
 
 exports.findAll = async (req, res) => {
     let result = {};
-
-    await axios.get("https://pokeapi.co/api/v2/pokemon/").then(data=>{
+    await axios.get("https://pokeapi.co/api/v2/pokemon?limit=100").then(data=>{
         let dtaApi = data.data.results;
         for (let i = 0; i < dtaApi.length; i++) {
             let element = dtaApi[i];
