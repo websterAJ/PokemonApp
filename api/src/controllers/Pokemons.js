@@ -146,14 +146,30 @@ exports.findAll = async (req, res) => {
 exports.findById = async (req, res) => {
     let id = req.params.idPokemon;
     if(id != null){
-        let {data} =Pokemon.findByPk(id);
-        if(!data){
-            let {dataApi} = await axios.get(`${URl}${id}`)
-            if(dataApi){
-
-            }else{
-                res.status(500).send({message:"pokemon does not exist"});
-            }
+        let data ={}
+        console.log(id.length);
+        if(id.length <=3){
+            data = await axios.get(`${URl}/${id}`)
+        }else{
+            data = Pokemon.findByPk(id);
+        }
+        
+        if(data){
+            let dt = data.data
+            PokemonDta={}
+            PokemonDta["id"]= dt.id
+            PokemonDta["nombre"]= dt.name
+            PokemonDta["vida"]= dt.stats[0].base_stat
+            PokemonDta["imagen"]= dt.sprites.other.dream_world.front_default
+            PokemonDta["ataque"]= dt.stats[1].base_stat
+            PokemonDta["defensa"]= dt.stats[2].base_stat
+            PokemonDta["velocidad"]= dt.stats[5].base_stat
+            PokemonDta["altura"]= dt.height
+            PokemonDta["peso"]= dt.weight
+            PokemonDta["Types"]= dt.types.map((tp)=>tp.type.name)
+            res.send(PokemonDta);
+        }else{
+            res.status(500).send({message:"pokemon does not exist"});
         }
     }else{
         res.status(500).send({message:"you must specify an id"});
