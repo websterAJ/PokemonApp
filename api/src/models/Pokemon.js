@@ -34,11 +34,11 @@ module.exports = (sequelize) => {
       allowNull: true,
     },
     altura: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DOUBLE,
       allowNull: true,
     },
     peso: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DOUBLE,
       allowNull: true,
     },
   });
