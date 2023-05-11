@@ -1,8 +1,6 @@
-const db = require("../db");
-const Pokemon = db.Pokemon;
+const {Pokemon,Type, PokemonTypes}= require("../db");
 const axios = require("axios");
-const { Op } = require("sequelize");
-const Type = require("../models/Type");
+const { Op } = require("sequelize");;
 
 const URl = "https://pokeapi.co/api/v2/pokemon";
 
@@ -14,7 +12,8 @@ let PokemonDta = {
     "defensa":0,
     "velocidad":0,
     "altura":0.0,
-    "peso":0.0
+    "peso":0.0,
+    "Type":[]
 };
 
 let result = {
@@ -27,18 +26,24 @@ const validarData= (body) =>{
     let resutl = true;
     for (let ele in body){
         let element =body[ele];
-        if(typeof(element) == 'string'){
-            if (element !== "" && PokemonDta[ele] != undefined ) {
+        switch (typeof(element)) {
+            case 'string':
+                if (element !== "" && PokemonDta[ele] != undefined ) {
+                    PokemonDta[ele] = element
+                }else{
+                    resutl= false; 
+                }
+                break;
+            case 'number':
+                if (element > 0 && PokemonDta[ele] != undefined ) {
+                    PokemonDta[ele] = element
+                }else if(ele != "velocidad" && ele != "altura" && ele != "peso"){
+                    resutl= false;
+                }
+                break;
+            default:
                 PokemonDta[ele] = element
-            }else{
-                resutl= false; 
-            }
-        }else if(typeof(element) == 'number'){
-            if (element > 0 && PokemonDta[ele] != undefined ) {
-                PokemonDta[ele] = element
-            }else if(ele != "velocidad" && ele != "altura" && ele != "peso"){
-                resutl= false;
-            }
+                break;
         }
     }
     return resutl;
@@ -67,8 +72,36 @@ exports.create = async (req, res) => {
     try {
         let dta = await Pokemon.findOne({where:{ nombre: PokemonDta.nombre}});
         if(dta == null){
-            Pokemon.create(PokemonDta).then(data => {
-                res.send({data:data,message:"data successfully saved"});
+            Pokemon.create(PokemonDta).then(async (data) => {
+                if (data != null) {
+                    PokemonDta.Type.map(async(pokeType)=>{
+                        console.log(pokeType);
+                        let dataType =await Type.findOne({
+                            where:{
+                                nombre: {
+                                    [Op.eq]: pokeType.nombre
+                                }
+                            },
+                            attributes: ['id']
+                        });
+                        if(dataType != null){
+                            PokemonTypes.create({
+                                "pokemonId":data.id,
+                                "typeId":dataType.id
+                            });
+                            res.send({data:PokemonDta,message:"data successfully registered"});
+                        }else{
+                            Pokemon.destroy({
+                                where: {
+                                  id: data.id
+                                }
+                            });
+                            res.status(400).send({
+                                message:  "type of pokemon not registered"
+                            }); 
+                        }
+                    })
+                }
             });
         }else{
             res.status(400).send({
@@ -159,6 +192,14 @@ exports.findById = async (req, res) => {
                         }
                     },
                     attributes: ['id','nombre','vida','imagen','ataque','defensa','velocidad', 'altura','peso']
+                }).then(async (pokemon)=>{
+                    await Pokemon.findOne({
+                        where:{
+                            id: {
+                                [Op.eq]: id
+                            }
+                        }
+                    })
                 });
             }
             

@@ -40,19 +40,13 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Pokemon, Type } = sequelize.models;
+const { Pokemon, Type, PokemonTypes} = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
 
-Pokemon.belongsToMany(Type,{
-   through: "pokemonType",
-   foreignKey:"id_pokemon"
-});
-Type.belongsToMany(Pokemon,{
-   through: "pokemonType",
-   foreignKey:"id_type"
-});
+Pokemon.pokemonType = Pokemon.belongsToMany(Type,{through: PokemonTypes});
+Type.pokemonType = Type.belongsToMany(Pokemon,{through: PokemonTypes});
 
 const getDataApi = async ()=>{
    await axios.get("https://pokeapi.co/api/v2/type")
