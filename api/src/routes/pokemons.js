@@ -8,6 +8,7 @@ router.get("/?page(1-9)", PokemonController.findAll);
 router.get("/name?", PokemonController.findByName);
 router.get("/:idPokemon",PokemonController.findById);
 router.post("/",PokemonController.create);
-
+router.delete("/",PokemonController.delete);
+router.put("/:id",PokemonController.update);
 
 module.exports= router

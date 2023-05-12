@@ -72,37 +72,31 @@ exports.create = async (req, res) => {
     try {
         let dta = await Pokemon.findOne({where:{ nombre: PokemonDta.nombre}});
         if(dta == null){
-            Pokemon.create(PokemonDta).then(async (data) => {
-                if (data != null) {
-                    PokemonDta.Type.map(async(pokeType)=>{
-                        console.log(pokeType);
-                        let dataType =await Type.findOne({
-                            where:{
-                                nombre: {
-                                    [Op.eq]: pokeType.nombre
-                                }
-                            },
-                            attributes: ['id']
-                        });
-                        if(dataType != null){
-                            PokemonTypes.create({
-                                "pokemonId":data.id,
-                                "typeId":dataType.id
-                            });
-                            res.send({data:PokemonDta,message:"data successfully registered"});
-                        }else{
-                            Pokemon.destroy({
-                                where: {
-                                  id: data.id
-                                }
-                            });
-                            res.status(400).send({
-                                message:  "type of pokemon not registered"
-                            }); 
+            let NewPokemon = await Pokemon.create(PokemonDta);
+            PokemonDta.Type.map(async(pokeType)=>{
+                let dataType =await Type.findOne({
+                    where:{
+                        nombre: {
+                            [Op.eq]: pokeType.nombre
                         }
-                    })
+                    },
+                    attributes: ['id']
+                });
+                if(dataType != null){
+                    NewPokemon.addTypes(dataType);
+                }else{
+                    Pokemon.destroy({
+                        where: {
+                          id: data.id
+                        }
+                    });
+                    res.status(400).send({
+                        message:  " type of pokemon not registered"
+                    }); 
                 }
             });
+            
+            res.send({data:NewPokemon,message:"data successfully registered"});
         }else{
             res.status(400).send({
                 message:  "pokemon already registered in database"
@@ -219,7 +213,7 @@ exports.findById = async (req, res) => {
         }
         
     } catch (error) {
-        res.status(500).send({message:"Error al procesar su peticion"});
+        res.status(500).send({message:"Error processing your request"});
     }
     
 };
@@ -255,4 +249,42 @@ exports.findByName = async (req, res) => {
     }else{
         res.status(500).send({message:"pokemon does not exist"});
     }
+}
+
+exports.delete=async (req, res)=>{
+    let id = req.query.id;
+    if(id){
+        let data = await Pokemon.destroy({
+            where: {
+              id: id
+            }
+        });
+        res.status(200).send({data:data,message:"pokemon updated successfully removed"});
+    }else{
+        res.status(500).send({message:"You must send the id of the pokemon to be sent."});
+    }
+}
+
+exports.update = async (req, res)=>{
+    let id = req.params.id;
+    try {
+        if (id) {
+            if (!validarData(req.body)) {
+                res.status(400).send({
+                    message: "error while processing data please check"
+                });
+            }
+            let data = await Pokemon.update(PokemonDta,{
+                where: {
+                  id: id
+                }
+            });
+            res.status(200).send({data:data,message:"pokemon successfully updated"});
+        }else{
+            res.status(500).send({message:"You must send the id of the pokemon to be sent."});
+        }
+    } catch (error) {
+        res.status(500).send({message:"Error processing your request"});
+    }
+    
 }
