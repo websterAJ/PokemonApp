@@ -3,10 +3,12 @@
     left: 0;
     bottom: 0;
     width: 100%;
+    background-image: url("../../assets/img/fpokemon2.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .footer-content{
     width: 100%;
-    background-color: red;
     color: white;
     text-align: center;
 }
