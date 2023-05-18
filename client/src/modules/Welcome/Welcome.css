@@ -1,0 +1,13 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.logo{
+    width: 500px;
+    height: inherit;
+}
+div.welcome{
+    margin: 0;
+    top: 50%;
+}
