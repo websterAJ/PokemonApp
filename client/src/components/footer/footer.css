@@ -1,0 +1,18 @@
+.footer{
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+.footer-content{
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
+}
+.footer-content-left{
+    text-align: left;
+}
+.footer-content-right{
+    text-align: right;
+}

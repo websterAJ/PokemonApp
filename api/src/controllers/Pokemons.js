@@ -1,6 +1,6 @@
-const {Pokemon,Type, PokemonTypes}= require("../db");
+const {Pokemon,Type}= require("../db");
 const axios = require("axios");
-const { Op } = require("sequelize");;
+const { Op } = require("sequelize");
 
 const URl = "https://pokeapi.co/api/v2/pokemon";
 
@@ -228,7 +228,11 @@ exports.findByName = async (req, res) => {
                     [Op.eq]: name
                 }
             },
-            attributes: ['id','nombre','vida','imagen','ataque','defensa','velocidad', 'altura','peso']
+            attributes: ['id','nombre','vida','imagen','ataque','defensa','velocidad', 'altura','peso'],
+            include: {
+                model: Type,
+                attributes:['nombre']
+            }
         });
         if(data == null){
             data = await axios.get(`${URl}`).then(async (data)=>{
@@ -252,14 +256,16 @@ exports.findByName = async (req, res) => {
 }
 
 exports.delete=async (req, res)=>{
-    let id = req.query.id;
+    let id = req.body.id;
     if(id){
-        let data = await Pokemon.destroy({
+        await Pokemon.destroy({
             where: {
-              id: id
+              id: {
+                [Op.eq]: id
+              }
             }
         });
-        res.status(200).send({data:data,message:"pokemon updated successfully removed"});
+        res.status(200).send({message:"pokemon removed successfully"});
     }else{
         res.status(500).send({message:"You must send the id of the pokemon to be sent."});
     }
@@ -269,17 +275,20 @@ exports.update = async (req, res)=>{
     let id = req.params.id;
     try {
         if (id) {
+            console.log(id);
             if (!validarData(req.body)) {
                 res.status(400).send({
                     message: "error while processing data please check"
                 });
             }
-            let data = await Pokemon.update(PokemonDta,{
+            await Pokemon.update(PokemonDta,{
                 where: {
-                  id: id
+                    id:{
+                        [Op.eq]: id
+                    }
                 }
             });
-            res.status(200).send({data:data,message:"pokemon successfully updated"});
+            res.status(200).send({data:PokemonDta,message:"pokemon successfully updated"});
         }else{
             res.status(500).send({message:"You must send the id of the pokemon to be sent."});
         }
