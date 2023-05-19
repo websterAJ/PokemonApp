@@ -5,6 +5,7 @@ import Home from '../Home/Home';
 import Detail from '../Detail/Detail';
 import Form from '../Form/Form';
 import Welcome from '../Welcome/Welcome';
+import Footer from '../../components/Footer/Footer.jsx';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      <Footer/>
     </div>
   );
 }

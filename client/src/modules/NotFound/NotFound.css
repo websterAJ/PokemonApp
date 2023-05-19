@@ -1,20 +1,4 @@
-body{
-    height: 100%;
-    background-image: url(../../assets/img/fpokemon3.jpg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100%;
-    text-align: center;
-}
 
-@font-face {
-    font-family: PokemonFonts;
-    src: url(../../assets/fonts/Pokemon-Solid.ttf);
-}
-.center{
-    text-align: center;
-    vertical-align: middle;
-}
 .title{
     font-family: PokemonFonts;
     color: grey;
@@ -33,10 +17,7 @@ img{
     margin: 0;
 }
 
-.Container{
-    height: 100%;
-    width: 100%;
-}
+
 .TextError{
     font-family: PokemonFonts;
     margin: 0;

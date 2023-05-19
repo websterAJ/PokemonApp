@@ -6,6 +6,17 @@
     background-image: url("../../assets/img/fpokemon2.jpg");
     background-repeat: no-repeat;
     background-size: cover;
+    padding: 15px;
+}
+.icon-github{
+    content: url("../../assets/img/Icongithub.png");
+    width: 35px;
+    margin-right: 10px;
+}
+.icon-linkedin{
+    content: url("../../assets/img/Iconlinkedin.png");
+    width: 35px;
+    margin-right: 10px;
 }
 .footer-content{
     width: 100%;
