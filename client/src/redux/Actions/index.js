@@ -1,12 +1,26 @@
 import axios from "axios";
-const BASE_URL = process.env.Api;
-
+const BASE_URL ="http://localhost:3001"
 export function GetPokemons() {
     return async function (dispatch) {
         try {
-            return dispatch({
+			let data = await axios(`${BASE_URL}/pokemons`);
+            dispatch({
                 type: "GetAllPokemons",
-                payload: await axios(`${BASE_URL}/pokemons`)
+                payload: data.data
+            })
+        } catch (err) {
+            console.log({ msg: err.message })
+        }
+    }
+}
+
+export function GetPokemonsByPage(page) {
+    return async function (dispatch) {
+        try {
+			let data = await axios(`${BASE_URL}/pokemons/${page}`);
+            dispatch({
+                type: "GetPokemonsByPage",
+                payload: data.data
             })
         } catch (err) {
             console.log({ msg: err.message })
@@ -17,9 +31,10 @@ export function GetPokemons() {
 export function getAllTypes() {
 	return async function (dispatch) {
 		try {
-			return dispatch({
+			let data = await axios.get(`${BASE_URL}/types`);
+			dispatch({
 				type: "GetAllTypes",
-				payload: await axios.get(`${BASE_URL}/types`)
+				payload: data.data
 			});
 		} catch (error) {
 			console.log(error);

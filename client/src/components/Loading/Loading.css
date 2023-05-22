@@ -1,0 +1,26 @@
+.loading{
+    margin: 0 auto;
+    width: 100%;
+}
+.pokeball{
+    height: 250px;
+    width: 250px;
+    margin: auto auto 150px auto;
+}
+
+h2{
+    font-family: PokemonFonts;
+    font-size: 2em;
+    margin-top: -15px;
+}
+
+.pokeball img{
+    height: 250px;
+    width: 250px;
+    animation: load 2s infinite;
+}
+@keyframes load{
+    50%{
+        transform: scale(0.7);
+    }
+}

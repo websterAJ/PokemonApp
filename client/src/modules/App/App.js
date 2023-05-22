@@ -16,7 +16,7 @@ function App() {
           <Route path='/' element={<Welcome />} />
           <Route path='/home' element={<Home />} />
           <Route path='/details/:id' element={<Detail />} />
-          <Route path='/create-pokemon/' element={<Form />} />
+          <Route path='/create-pokemon' element={<Form />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>

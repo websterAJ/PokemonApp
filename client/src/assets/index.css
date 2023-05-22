@@ -16,17 +16,15 @@ a{
 }
 body{
   margin: 0;
-  height: 100vh;
   background-image: url(./img/fpokemon3.jpg);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100%;
+  background-size:cover;
   font-family: MonserratRegular;
 }
 
 .center{
   margin: 0 auto;
-  text-align: center;
   vertical-align: middle;
 }
 
@@ -34,8 +32,6 @@ body{
   position: relative;
   width: 100%;
 }
-
-
 
 .ml-10{
   margin-left: 10px;
@@ -86,6 +82,9 @@ body{
 
 .w-50{
   width: 50%;
+}
+.w-80{
+  width: 80%;
 }
 .w-25{
   width: 25%;

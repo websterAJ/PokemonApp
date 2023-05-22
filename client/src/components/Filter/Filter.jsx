@@ -1,15 +1,14 @@
 import "./Filter.css"
 import Select from "../Select/Select";
-export default function Filter(){
-    let data =[
-		"a",
-		"b",
-		"c"
-	]
+export default function Filter({Types,Orders}){
+    let dataType = []
+    Types.map((dta)=>{
+        return dataType.push(dta.nombre);
+    })
     return (
         <div className="container-flex right">
-            <Select data={data}/>
-            <Select data={data}/>
+            <Select data={dataType}/>
+            <Select data={Orders}/>
         </div>
     );
 }

@@ -9,12 +9,12 @@ export default function Card(props) {
     }
     
     return (
-    <div className="card">
-        <img src={props.imagen} alt="pokemon" />
-        <div className="container-card">
-            <h4><b>{props.nombre}</b></h4>
-            {Types}
+        <div className="card">
+            <img src={props.imagen} alt="pokemon" />
+            <div className="container-card">
+                <h4><b>{props.nombre}</b></h4>
+                {Types}
+            </div>
         </div>
-    </div>
     )
 }

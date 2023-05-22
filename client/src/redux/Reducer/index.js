@@ -1,8 +1,10 @@
 export const initialState = {
-	ListAllPokemons: [],
+	pokemons: [],
 	pokemon: {},
 	ListTypes: [],
-	loading: false,
+	loading: true,
+	next: "",
+	prev: ""
 };
 
 export default function rootReducer(state = initialState, action){
@@ -10,18 +12,23 @@ export default function rootReducer(state = initialState, action){
         case "GetAllPokemons":
             return {
 				...state,
-				pokemonsList: [...action.payload],
-				allPokemonsList: [...action.payload],
-				createdPokemonFiltered: [...action.payload],
+				pokemons: action.payload.data,
+				next: action.payload.next,
+				prev: action.payload.prev,
 				loading: false,
 			};
         case "GetAllTypes":
             return {
 				...state,
-				typesList: action.payload,
+				ListTypes: action.payload,
 			};
         case "GetPokemonByName":
             return {
+                ...state,
+                pokemons: action.payload
+            }
+		case "GetPokemonsByPage":
+			return {
                 ...state,
                 pokemons: action.payload
             }
@@ -29,6 +36,7 @@ export default function rootReducer(state = initialState, action){
             return {
                 ...state,
             }
+		
         case "GetPokemonDetail":
             return {
                 ...state,
@@ -37,12 +45,12 @@ export default function rootReducer(state = initialState, action){
             };
 
         case "filterByTypes":
-            const allPokemons = [...state.createdPokemonFiltered];
+            const allPokemons = [...state.pokemons];
 
 			if (action.payload === "all") {
 				return {
 					...state,
-					pokemonsList: allPokemons,
+					pokemons: allPokemons,
 				};
 			} else {
 				const typesFiltered = allPokemons.filter(
@@ -53,11 +61,11 @@ export default function rootReducer(state = initialState, action){
 
 				return {
 					...state,
-					pokemonsList: typesFiltered,
+					pokemons: typesFiltered,
 				};
 			}
         case "filterByOrder":
-            const currentPokemons = [...state.pokemonsList];
+            const currentPokemons = [...state.pokemons];
 			if (action.payload === "pokedex") {
 				currentPokemons.sort((obj1, obj2) => {
 					if (obj1.id < obj2.id) {
@@ -87,7 +95,7 @@ export default function rootReducer(state = initialState, action){
 			}
 			return {
 				...state,
-				pokemonsList: currentPokemons,
+				pokemons: currentPokemons,
 			};
         default:
             return state;

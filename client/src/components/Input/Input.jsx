@@ -2,13 +2,17 @@ import "./Input.css"
 
 export default function Input(props) {
     let label;
-    if(props.label === "true") {
-        label = <label >{props.name}</label>
+    let element;
+    if(props.label === "true" && props.type !== "checkbox") {
+        label = <label >{props.id.charAt(0).toUpperCase() + props.id.slice(1)}</label>
+    }
+
+    if(props.type !=="checkbox"){
+        element =<div className="divInput">{label}<input type={props.type} id={props.id} name={props.id} className={"border-round "+props.css } placeholder={props.placeholder} /></div>
+    }else{
+        element = <div><label class="checkbox">{props.id}<input type="checkbox" id={props.id} name={props.id} className="border-round "/><span class="checkmark"></span></label></div>
     }
     return(
-        <>
-            {label}
-            <input type={props.type} id={props.id} name={props.name} className={"border-round "+props.css } placeholder={props.placeholder} />
-        </>
+        element
     );
 }

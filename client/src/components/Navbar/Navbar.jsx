@@ -14,6 +14,7 @@ export default function Navbar() {
                         <Button textType="icon" text="search" onclick="accion" type="icon btn-radius"/>
                     </div>
                 </div>
+                <Button text="Nuevo Pokemon" to="/create-pokemon" type="mt-10 btn-radius"/>
             </div>
         </div>
     );
