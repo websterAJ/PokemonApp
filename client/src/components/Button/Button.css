@@ -8,8 +8,11 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    border-radius: 15px;
     transition-duration: 0.4s;
+}
+
+.btn-radius{
+    border-radius: 15px;
 }
 
 .btn.primary{
@@ -22,7 +25,18 @@
     border-color: #ed1b24;
     color: black;
 }
-
+.btn.icon{
+    margin: 0 auto;
+    padding: 0;
+    padding: 0px !important;
+    height:35px;
+    width:45px;
+}
+span.search{
+    content: url(../../assets/img/Iconzoom.png);
+    width: 25px;
+    height: 25px;
+}
 .btn:hover{
     background: #395ea9;
     border-color: #ffcb05;

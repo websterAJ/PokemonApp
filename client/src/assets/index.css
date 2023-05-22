@@ -23,12 +23,9 @@ body{
   background-size: 100%;
   font-family: MonserratRegular;
 }
-.container-center{
-  margin: 0 auto;
-  text-align: center;
-  vertical-align: middle;
-}
+
 .center{
+  margin: 0 auto;
   text-align: center;
   vertical-align: middle;
 }
@@ -36,6 +33,31 @@ body{
 .container{
   position: relative;
   width: 100%;
+}
+
+
+
+.ml-10{
+  margin-left: 10px;
+}
+
+.ml-15{
+  margin-left: 15px;
+}
+
+.ml-20{
+  margin-left: 20px;
+}
+.mr-10{
+  margin-right: 10px;
+}
+
+.mr-15{
+  margin-right: 15px;
+}
+
+.mr-20{
+  margin-right: 20px;
 }
 
 .mt-10{
@@ -72,3 +94,15 @@ body{
   width: 100%;
 }
 
+.control-group{
+  display:flex;
+  align-items:Center;
+}
+.container-flex{
+  display: flex;
+}
+.right{
+  display: flex;
+  flex-direction: row-reverse;
+  margin-right: 25px;
+}

@@ -26,7 +26,7 @@ function NotFound(){
                 />
             </div>
 			
-            <Button type="primary" to='/home/' text="REGRESAR AL HOME"/>
+            <Button type="primary btn-radius" to='/home/' text="REGRESAR AL HOME"/>
 		</div>
 	);
 };

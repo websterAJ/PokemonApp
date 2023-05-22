@@ -10,7 +10,7 @@ function Welcome (){
 			<div className="welcome">
 				<img src={logo} alt="Pokemon logo" className="logo"/>
 				<h1>Bienvenidos a mi PokeDex</h1>
-				<Button text="Ingresar" to="/home" type="primary mt-20"/>
+				<Button text="Ingresar" to="/home" type="primary mt-20 btn-radius"/>
 			</div>
 		</div>
 	);
