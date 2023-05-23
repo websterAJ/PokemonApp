@@ -10,6 +10,8 @@ export default function Button(props) {
         }else{
             button = <button className={"btn "+props.type} onclick={props.onClick}>{props.text}</button>
         }
+    }else if(props.form === "true"){
+        button = <button type={props.typeBtn} className={"btn "+props.type}>{props.text}</button>
     }else{
         if(props.btnForm === "true"){
             button = <button type={props.tpbtn} className={"btn "+props.type}>{props.text}</button>

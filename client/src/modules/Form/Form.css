@@ -1,3 +1,7 @@
+form{
+    width: 100%;
+}
+
 .grid{
     margin: 0 auto;
     display: grid;

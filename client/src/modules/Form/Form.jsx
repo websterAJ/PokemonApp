@@ -136,7 +136,7 @@ export default function Form(){
 					</div>
 					<div className="grid">
 						{
-							AllTypes.map((item)=>{
+							AllTypes.map((item,i)=>{
 								return (
 									<div key={item.id}>
 										<label className="checkbox">{item.nombre}
