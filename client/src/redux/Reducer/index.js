@@ -3,6 +3,7 @@ export const initialState = {
 	pokemon: {},
 	ListTypes: [],
 	loading: true,
+	countPokemon:0,
 	next: "",
 	prev: ""
 };
@@ -13,6 +14,7 @@ export default function rootReducer(state = initialState, action){
             return {
 				...state,
 				pokemons: action.payload.data,
+				countPokemon: action.payload.count,
 				next: action.payload.next,
 				prev: action.payload.prev,
 				loading: false,

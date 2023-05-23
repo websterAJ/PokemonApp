@@ -19,6 +19,7 @@ let PokemonDta = {
 let result = {
     "next":"",
     "prev":"",
+    "count":"",
     "data":[]
 };
 
@@ -74,13 +75,13 @@ exports.create = async (req, res) => {
         if(dta == null){
             let NewPokemon = await Pokemon.create(PokemonDta);
             PokemonDta.Type.map(async(pokeType)=>{
+                console.log(pokeType)
                 let dataType =await Type.findOne({
                     where:{
                         nombre: {
-                            [Op.eq]: pokeType.nombre
+                            [Op.eq]: pokeType
                         }
-                    },
-                    attributes: ['id']
+                    }
                 });
                 if(dataType != null){
                     NewPokemon.addTypes(dataType);
@@ -146,11 +147,18 @@ const validarPage=(page)=>{
 
 exports.findAll = async (req, res) => {
     result["data"]=[];
+    result["count"]= 100;
     let page = parseInt(req.query.page);
     if(!page){
         let count = await Pokemon.count();
+        result["count"] +=count;
         if(count>0){
-            await Pokemon.findAll().then((pokemon)=>{
+            await Pokemon.findAll({
+                include: {
+                    model: Type,
+                    attributes:['nombre']
+                }
+            }).then((pokemon)=>{
                 pokemon.map((tp)=>{
                     result["data"].push(tp.dataValues);
                 })
@@ -173,11 +181,27 @@ exports.findAll = async (req, res) => {
 exports.findById = async (req, res) => {
     try {
         let id = req.params.idPokemon;
+        let api = false;
         if(id != null){
             let data ={}
-            console.log(id.length);
             if(id.length <=3){
-                data = await axios.get(`${URl}`);
+                api=true;
+                data = await axios.get(`${URl}/${id}`).then(async(dta)=>{
+                    PokemonDta={}
+                    PokemonDta = procesarData(dta);
+                    console.log(PokemonDta);
+                    return PokemonDta;
+                    /*for (let i = 0; i < results.length; i++) {
+                        idPoke=results[i].url.replace(`${URl}`,"").replace("/","").replace("/","");
+                        if(idPoke === id){
+                            let pokemon =await axios.get(results[i].url).then((detalle_pokemon)=>{
+                                PokemonDta = procesarData(detalle_pokemon);
+                                return PokemonDta;
+                            })
+                            return pokemon;
+                        }
+                    }*/
+                });
             }else{
                 data = await Pokemon.findOne({
                     where:{
@@ -198,9 +222,9 @@ exports.findById = async (req, res) => {
             }
             
             if(data){
-                PokemonDta={}
-                if(data.hasOwnProperty("data")){
-                    PokemonDta = procesarData(data);
+                PokemonDta={};
+                if(api){
+                    PokemonDta= data;
                 }else{
                     PokemonDta = data.dataValues
                 }
@@ -213,6 +237,7 @@ exports.findById = async (req, res) => {
         }
         
     } catch (error) {
+        console.log(error);
         res.status(500).send({message:"Error processing your request"});
     }
     

@@ -1,6 +1,5 @@
 import React from "react";
-import "./Pagination.css"
-import Button from "../Button/Button";
+import "./Pagination.css";
 
 
 export default function Pagination({ pokemonsPerPage, totalPokemons, paginate, next,prev }){
@@ -11,13 +10,13 @@ export default function Pagination({ pokemonsPerPage, totalPokemons, paginate, n
     return (
         <nav className="Nav">
             <div>
-                <Button onClick={() => paginate(prev)} text="Prev" type="paginacion"/>
+                <button className="btn paginacion" onClick={(e)=>paginate(prev)}>Prev</button>
                 {
                 pageNumber && pageNumber.map((number) => (
-                    <Button onClick={() => paginate(number)}  key={number} text={number} type="paginacion"/>
+                    <button className="btn paginacion" onClick={(e)=>paginate(number)}>{number}</button>
                 ))
                 }
-                <Button onClick={() => paginate(next)} text="Next" type="paginacion"/>
+                <button className="btn paginacion" onClick={(e)=>paginate(next)}>Next</button>
             </div>
         </nav>
     );

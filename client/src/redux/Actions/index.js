@@ -60,10 +60,10 @@ export function getPokemonDetail(id) {
 		try {
 			return dispatch({
 				type: "GetPokemonDetail",
-				payload: await axios.get(`/pokemons/${id}`),
+				payload: await axios.get(`${BASE_URL}/pokemons/${id}`),
 			});
 		} catch (error) {
-			console.log(error);
+			console.log(error.response);
 		}
 	};
 }
@@ -72,7 +72,7 @@ export function createPokemon(payload) {
 	return async function (dispatch) {
 		return dispatch({
             type: "CreatePokemon",
-            payload: await axios.post("/pokemons", payload)
+            payload: await axios.post(`${BASE_URL}/pokemons`, payload)
         });
 	};
 }

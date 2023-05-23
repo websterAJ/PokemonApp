@@ -9,6 +9,7 @@ import Pagination from "../../components/Pagination/Pagination"
 import notFoundImg from "../../assets/img/erreur404.png"
 import Card from "../../components/Card/Card"
 import Loading from "../../components/Loading/Loading";
+import { Link } from "react-router-dom";
 
 export default function Home(){
 	const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export default function Home(){
     let Orders = ["ascendente","descendente"];
     let next = useSelector(state => state.next);
     let prev = useSelector(state => state.prev);
+    let countPokemon = useSelector(state => state.countPokemon);
     const loading = useSelector((state) => state.loading);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -24,20 +26,17 @@ export default function Home(){
 
     useEffect(() => {
         dispatch(GetPokemons());
-    }, [dispatch]);
-
-    useEffect(() => {
         dispatch(getAllTypes());
     }, [dispatch]);
 
-    let currentPokemons = AllData.filter((item,index)=>{
-        return AllData.indexOf(item) === index;
-    });
-
+    let hash = {};
+    //let currentPokemons = AllData.filter(o => hash[o.id] ? false : hash[o.id] = true);
+    let currentPokemons = AllData;
     
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    console.log(AllTypes);
-    console.log(Orders);
+    const paginate = (pageNumber) =>{
+        console.log(pageNumber);
+        setCurrentPage(pageNumber)
+    };
 	
 	return (
 		<div className="container">
@@ -55,13 +54,15 @@ export default function Home(){
                         {currentPokemons.length ? (
                             currentPokemons.map((dta,i)=>{
                                 return(
-                                    <div key={i}>
-                                        <Card
-                                            id={dta.id}
-                                            imagen={dta.imagen}
-                                            nombre={dta.nombre}
-                                            Types={dta.Types}
-                                        />
+                                    <div key={dta.nombre}>
+                                        <Link to={"/details/"+dta.id}>
+                                            <Card
+                                                id={dta.id}
+                                                imagen={dta.imagen}
+                                                nombre={dta.nombre}
+                                                Types={dta.Types ? dta.Types: dta.types}
+                                            />
+                                        </Link>
                                     </div>
                                 )
                             })
@@ -76,7 +77,7 @@ export default function Home(){
             }
 			<Pagination
                 pokemonsPerPage={pokemonsPerPage}
-                totalPokemons="100"
+                totalPokemons={countPokemon}
                 paginate={paginate}
                 next={next}
                 prev={prev}
