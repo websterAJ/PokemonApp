@@ -10,6 +10,8 @@ export default function Button(props) {
         }else{
             button = <button className={"btn "+props.type}>{props.text}</button>
         }
+    }else if(props.form === "true"){
+        button = <button type={props.typeBtn} className={"btn "+props.type}>{props.text}</button>
     }else{
         button = <Link to={props.to}><button className={"btn "+props.type}>{props.text}</button></Link>
     }

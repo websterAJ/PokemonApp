@@ -24,9 +24,6 @@ export default function Home(){
 
     useEffect(() => {
         dispatch(GetPokemons());
-    }, [dispatch]);
-
-    useEffect(() => {
         dispatch(getAllTypes());
     }, [dispatch]);
 

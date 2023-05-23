@@ -11,7 +11,6 @@ import { getAllTypes} from "../../redux/Actions/index";
 function Form(){
 	const dispatch = useDispatch();
 	let AllTypes = useSelector(state => state.ListTypes);
-	console.log(AllTypes);
 	
 	useEffect(() => {
         dispatch(getAllTypes());
@@ -85,9 +84,10 @@ function Form(){
 					/>
 					<div className="grid">
 						{
-							AllTypes.map((item)=>{
+							AllTypes.map((item,i)=>{
 								return (
-									<Input 
+									<Input
+										key={i}
 										label="true"
 										type="checkbox"
 										id={item.nombre}
@@ -96,8 +96,8 @@ function Form(){
 							})
 						}
 					</div>
-					<Button text="Registrar" type="primary"/>
-					<Button text="Limpiar" type=""/>
+					<Button form="true" typeBtn="submit" text="Registrar" type="primary"/>
+					<Button form="true" typeBtn="reset" text="Limpiar" type=""/>
 				</form>
 			</div>
 		</>
