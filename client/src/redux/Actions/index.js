@@ -78,15 +78,34 @@ export function createPokemon(payload) {
 }
 
 export function filterByTypes(payload) {
-	return {
-		type: "filterByTypes",
-		payload,
+	return async function(dispatch){ 
+		return dispatch({
+			type: "filterByTypes",
+			payload,
+		})
+	};
+}
+
+export function filterByName(payload) {
+	return async function(dispatch){ 
+		return dispatch({
+			type: "filterByName",
+			payload,
+		})
 	};
 }
 
 export function filterByOrder(payload) {
+	return async function(dispatch){ 
+		return dispatch({
+			type: "filterByOrder",
+			payload,
+		})
+	};
+}
+
+export function ClearFilter(){
 	return {
-		type: "filterByOrder",
-		payload,
+		type: "EMPTY_FILTER",
 	};
 }

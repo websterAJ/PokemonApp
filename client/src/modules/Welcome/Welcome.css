@@ -11,4 +11,5 @@ div.welcome{
     margin: 0 auto;
     top: 50%;
     transform: translateY(50%);
+    margin-bottom: 55vh;
 }

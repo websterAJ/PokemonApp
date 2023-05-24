@@ -1,5 +1,7 @@
 export const initialState = {
 	pokemons: [],
+	Allpokemons:[],
+	dataFilter:false,
 	pokemon: {},
 	ListTypes: [],
 	loading: true,
@@ -46,58 +48,113 @@ export default function rootReducer(state = initialState, action){
                 loading: false,
             };
 
+		case "filterByName":
+			if (action.payload.length>0) {
+				let allPokemons = [...state.pokemons];
+				let typesFiltered = allPokemons.filter((pokemon) =>{
+					return pokemon.nombre.includes(action.payload)
+				}
+				);
+				return{
+					...state,
+					pokemons: typesFiltered,
+					dataFilter:true
+				};
+			}else{
+				return state;
+			}
         case "filterByTypes":
-            const allPokemons = [...state.pokemons];
-
-			if (action.payload === "all") {
+            let allPokemons = [...state.pokemons];
+			if (action.payload === "All") {
 				return {
 					...state,
 					pokemons: allPokemons,
 				};
 			} else {
-				const typesFiltered = allPokemons.filter(
-					(pokemon) =>
-						pokemon.types[0]?.name === action.payload ||
-						pokemon.types[1]?.name === action.payload
+				let typesFiltered = allPokemons.filter((pokemon) =>{
+						return pokemon.Types.includes(action.payload)
+					}
 				);
-
 				return {
 					...state,
 					pokemons: typesFiltered,
+					dataFilter:true
 				};
 			}
         case "filterByOrder":
-            const currentPokemons = [...state.pokemons];
-			if (action.payload === "pokedex") {
-				currentPokemons.sort((obj1, obj2) => {
-					if (obj1.id < obj2.id) {
-						return -1;
-					} else {
-						return 1;
-					}
-				});
-			}
-			if (action.payload === "ascending") {
-				currentPokemons.sort((obj1, obj2) => {
-					if (obj1.name < obj2.name) {
-						return -1;
-					} else {
-						return 1;
-					}
-				});
-			}
-			if (action.payload === "descending") {
-				currentPokemons.sort((obj1, obj2) => {
-					if (obj1.name < obj2.name) {
-						return 1;
-					} else {
-						return -1;
-					}
-				});
+            let currentPokemons = [...state.pokemons];
+			switch (action.payload) {
+				case "pokedex":
+					currentPokemons.sort((obj1, obj2) => {
+						if (obj1.id < obj2.id) {
+							return -1;
+						} else {
+							return 1;
+						}
+					});
+					break;
+				case "Order A-Z":
+					currentPokemons.sort((obj1, obj2) => {
+						if (obj1.nombre < obj2.nombre) {
+							return -1;
+						} else {
+							return 1;
+						}
+					});
+					break;
+				case "Order Z-A":
+					currentPokemons.sort((obj1, obj2) => {
+						if (obj2.nombre > obj1.nombre) {
+							return 1;
+						} else {
+							return -1;
+						}
+					});
+					break;
+				case "Attack +":
+					currentPokemons.sort((obj1, obj2) => {
+						if (obj1.ataque < obj2.ataque) {
+							return 1;
+						} else {
+							return -1;
+						}
+					});
+					break;
+				case "Attack -":
+					currentPokemons.sort((obj1, obj2) => {
+						if (obj1.ataque > obj2.ataque) {
+							return 1;
+						} else {
+							return -1;
+						}
+					});
+					break;
+				case "DB":
+					currentPokemons=currentPokemons.filter(o => o["origin"]==="db" ? true : false);
+					break;
+				case "Api":
+					currentPokemons=currentPokemons.filter(o => o["origin"]==="api" ? true : false);
+					break;
+				default:
+					break;
 			}
 			return {
 				...state,
 				pokemons: currentPokemons,
+				dataFilter:true
+			};
+		case "EMPTY_FILTER":
+			let data;
+			if(state.dataFilter === true){
+				state.pokemons= state.Allpokemons;
+				data=state.Allpokemons;
+			}else{
+				state.Allpokemons=state.pokemons;
+				data=state.pokemons;
+			}
+			return {
+				...state,
+				pokemons: data,
 			};
         default:
             return state;

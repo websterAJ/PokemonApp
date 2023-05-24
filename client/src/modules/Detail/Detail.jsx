@@ -14,6 +14,7 @@ function Detail(){
 	const pokemon = useSelector((state) => state.pokemon);
 	const [loading, setLoading] = useState(true);
 	const { id } = useParams();
+	let PokemonDetail,tipos;
 
 	useEffect(() => {
 		const getData = async () => {
@@ -23,7 +24,17 @@ function Detail(){
 		};
 		getData();
 	  }, [dispatch, id]);
-	  let PokemonDetail=pokemon.data;
+	  if(loading === false){
+		PokemonDetail=pokemon.data;
+		console.log(PokemonDetail);
+		if(PokemonDetail.Types){
+			tipos =PokemonDetail.Types;
+		}else if(PokemonDetail.types){
+			tipos =PokemonDetail.types.map((t)=>{
+				return t.nombre+" ";
+			});
+		}
+	  }
 	return (
 		<>
 			<Header/>
@@ -66,6 +77,10 @@ function Detail(){
 									<tr>
 										<td>Peso:</td>
 										<td>{PokemonDetail.peso}</td>
+									</tr>
+									<tr>
+										<td>Tipos:</td>
+										<td>{tipos}</td>
 									</tr>
 								</tbody>
 							</table>

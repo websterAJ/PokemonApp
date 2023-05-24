@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const URl = "https://pokeapi.co/api/v2/pokemon";
 
 let PokemonDta = {
+    "origin":"",
     "nombre":"",
     "vida":0,
     "imagen":"",
@@ -49,19 +50,27 @@ const validarData= (body) =>{
     }
     return resutl;
 }
-const procesarData =(data)=>{
-    let dt = data.data
+const procesarData =(data,origin)=>{
+    let dt;
     PokemonDta={}
-    PokemonDta["id"]= dt.id
-    PokemonDta["nombre"]= dt.name
-    PokemonDta["vida"]= dt.stats[0].base_stat
-    PokemonDta["imagen"]= dt.sprites.other.dream_world.front_default
-    PokemonDta["ataque"]= dt.stats[1].base_stat
-    PokemonDta["defensa"]= dt.stats[2].base_stat
-    PokemonDta["velocidad"]= dt.stats[5].base_stat
-    PokemonDta["altura"]= dt.height
-    PokemonDta["peso"]= dt.weight
-    PokemonDta["Types"]= dt.types.map((tp)=>tp.type.name)
+    if(data.hasOwnProperty("data")){
+        dt = data.data
+        PokemonDta["id"]= dt.id
+        PokemonDta["nombre"]= dt.name
+        PokemonDta["vida"]= dt.stats[0].base_stat
+        PokemonDta["imagen"]= dt.sprites.other.dream_world.front_default
+        PokemonDta["ataque"]= dt.stats[1].base_stat
+        PokemonDta["defensa"]= dt.stats[2].base_stat
+        PokemonDta["velocidad"]= dt.stats[5].base_stat
+        PokemonDta["altura"]= dt.height
+        PokemonDta["peso"]= dt.weight
+        PokemonDta["Types"]= dt.types.map((tp)=>tp.type.name)
+        PokemonDta["origin"]=origin;
+    }else{
+        dt = data.dataValues
+        PokemonDta=dt;
+        PokemonDta["origin"]=origin;
+    }
     return PokemonDta;
 }
 exports.create = async (req, res) => {
@@ -88,7 +97,7 @@ exports.create = async (req, res) => {
                 }else{
                     Pokemon.destroy({
                         where: {
-                          id: data.id
+                          id: NewPokemon.id
                         }
                     });
                     res.status(400).send({
@@ -117,7 +126,7 @@ const validarPage=(page)=>{
     let ultimoResult = 0;
 
     if (!page) {
-        condicion="offset=0&limit=20"
+        condicion="offset=0&limit=100"
         ultimoResult=20;
         result["prev"]=null
         result["next"]="localhost:3001/pokemons?page=2"
@@ -160,7 +169,8 @@ exports.findAll = async (req, res) => {
                 }
             }).then((pokemon)=>{
                 pokemon.map((tp)=>{
-                    result["data"].push(tp.dataValues);
+                    let data=procesarData(tp,"db");
+                    result["data"].push(data);
                 })
             });
         }
@@ -170,7 +180,7 @@ exports.findAll = async (req, res) => {
         let dtaApi = data.data.results;
         for (let i = 0; i < dtaApi.length; i++) {
             let algo = await axios.get(dtaApi[i].url).then((data)=>{
-                return procesarData(data);
+                return procesarData(data,"api");
             });  
             result["data"].push(algo);
         }
@@ -181,6 +191,8 @@ exports.findAll = async (req, res) => {
 exports.findById = async (req, res) => {
     try {
         let id = req.params.idPokemon;
+        console.log(req.params);
+        console.log(id);
         let api = false;
         if(id != null){
             let data ={}
@@ -191,16 +203,6 @@ exports.findById = async (req, res) => {
                     PokemonDta = procesarData(dta);
                     console.log(PokemonDta);
                     return PokemonDta;
-                    /*for (let i = 0; i < results.length; i++) {
-                        idPoke=results[i].url.replace(`${URl}`,"").replace("/","").replace("/","");
-                        if(idPoke === id){
-                            let pokemon =await axios.get(results[i].url).then((detalle_pokemon)=>{
-                                PokemonDta = procesarData(detalle_pokemon);
-                                return PokemonDta;
-                            })
-                            return pokemon;
-                        }
-                    }*/
                 });
             }else{
                 data = await Pokemon.findOne({
@@ -209,15 +211,11 @@ exports.findById = async (req, res) => {
                             [Op.eq]: id
                         }
                     },
-                    attributes: ['id','nombre','vida','imagen','ataque','defensa','velocidad', 'altura','peso']
-                }).then(async (pokemon)=>{
-                    await Pokemon.findOne({
-                        where:{
-                            id: {
-                                [Op.eq]: id
-                            }
-                        }
-                    })
+                    attributes: ['id','nombre','vida','imagen','ataque','defensa','velocidad', 'altura','peso'],
+                    include:{
+                        model: Type,
+                        attributes:['nombre']
+                    }
                 });
             }
             

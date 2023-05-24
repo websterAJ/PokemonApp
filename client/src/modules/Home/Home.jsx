@@ -15,14 +15,18 @@ export default function Home(){
 	const dispatch = useDispatch();
     let AllData = useSelector(state => state.pokemons);
     let AllTypes = useSelector(state => state.ListTypes);
-    let Orders = ["ascendente","descendente"];
-    let next = useSelector(state => state.next);
-    let prev = useSelector(state => state.prev);
     let countPokemon = useSelector(state => state.countPokemon);
     const loading = useSelector((state) => state.loading);
-
-    const [currentPage, setCurrentPage] = useState(1);
     const [pokemonsPerPage] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
+
+
+    const indexOfLastPokemon = currentPage * pokemonsPerPage;
+    const indexOfFirstPokemon = indexOfLastPokemon - pokemonsPerPage;
+
+    let next = currentPage+1;
+    let prev = currentPage-1;
+    let Orders = ["pokedex","Order A-Z","Order Z-A","Attack +","Attack -","DB","Api"];
 
     useEffect(() => {
         dispatch(GetPokemons());
@@ -30,11 +34,14 @@ export default function Home(){
     }, [dispatch]);
 
     let hash = {};
-    //let currentPokemons = AllData.filter(o => hash[o.id] ? false : hash[o.id] = true);
-    let currentPokemons = AllData;
+    let currentPokemons = AllData.filter(o => hash[o.id] ? false : hash[o.id] = true);
+    
+    currentPokemons = currentPokemons.slice(
+        indexOfFirstPokemon,
+        indexOfLastPokemon
+    )
     
     const paginate = (pageNumber) =>{
-        console.log(pageNumber);
         setCurrentPage(pageNumber)
     };
 	

@@ -42,7 +42,6 @@ export default function Form(){
 
 	const submitHandler = (event)=>{
 		event.preventDefault();
-		console.log(form);
 		if(!form.Type.length){
 			form.Type.push("normal")
 		}

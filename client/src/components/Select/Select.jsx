@@ -6,7 +6,7 @@ export default function Select(props) {
         return <option key={items} value={items}>{items}</option>
     })
     return (
-        <select id={props.id}>
+        <select id={props.id} onChange={props.onChange}>
             {dataFinal}
         </select>
     );
