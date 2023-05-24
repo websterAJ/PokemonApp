@@ -1,0 +1,20 @@
+services:
+  web:
+    build:
+      context: client
+      dockerfile: DockerFile
+    ports:
+      - 3000:3000
+  dataBase:
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=23124156
+    ports:
+      - 5432:5432
+  api:
+    build: 
+      context: api
+      dockerfile: DockerFile
+    ports:
+      - 3001:3001

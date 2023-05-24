@@ -14,7 +14,7 @@ function Detail(){
 	const pokemon = useSelector((state) => state.pokemon);
 	const [loading, setLoading] = useState(true);
 	const { id } = useParams();
-	let PokemonDetail,tipos;
+	let PokemonDetail,tipos,bd;
 
 	useEffect(() => {
 		const getData = async () => {
@@ -33,6 +33,7 @@ function Detail(){
 			tipos =PokemonDetail.types.map((t)=>{
 				return t.nombre+" ";
 			});
+			bd= true;
 		}
 	  }
 	return (
@@ -84,6 +85,14 @@ function Detail(){
 									</tr>
 								</tbody>
 							</table>
+						</div>
+						<div className="w-100 mt-50 center divContainer">
+							{/*bd?(
+								<>
+									<Button to="/home" text="Eliminar" type="primary"/>
+									<Button to="/home" text="Editar"/>
+								</>
+							):""*/}
 						</div>
 					</div>
 				)
