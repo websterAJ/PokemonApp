@@ -95,7 +95,7 @@ export default function Form(){
 
 					<div className="divInput" key="nombre">
 						<label>Nombre</label>
-						<input onChange={changeHandler} type="text" id="nombre" name="nombre" className="border-round " placeholder="Ingrese el nombre de su pokemon"  />
+						<input onChange={changeHandler} type="text" id="nombre" name="nombre" className="border-round " placeholder="Ingrese el nombre de su pokemon"  minLength="1" maxLength="50"/>
 						{error.nombre && <p className="Error">{error.nombre}</p>}
 					</div>
 					<div className="divInput" key="vida">
